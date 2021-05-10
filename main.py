@@ -27,7 +27,7 @@ if __name__ == '__main__':
 
     def nextWordBigram(firstWord,bigramModel):
         secWords = bigramModel[firstWord]
-        return Counter(secWords).most_common(1)
+        return Counter(secWords).most_common(10)
 
     ######   Tigram  #########
 
@@ -48,13 +48,13 @@ if __name__ == '__main__':
 
     def nextWordTigram(sentence,TigramModel):
         sentence = TigramModel[sentence]
-        return Counter(sentence).most_common(1)
+        return Counter(sentence).most_common(10)
 
     ###################### GUI ##########################
     bigramModel = buildBigramModel(corpus)
     tigramModel = buildTigramModel(corpus)
     root = tk.Tk()
-
+    root.geometry("400x400")
     user_input = tk.StringVar(root)
     answer = 3
 
@@ -62,17 +62,43 @@ if __name__ == '__main__':
     def verify():
         sentence = str(user_input.get())
         sentenceLen = len(sentence.split())
+        text = ""
         if(sentenceLen== 1):
             secWord=nextWordBigram(sentence,bigramModel)
-            print(secWord)
+            secWord = nextWordBigram(sentence, bigramModel)
+
+            for i in range(len(secWord)):
+                if i == 0:
+                    text += secWord[0][0]
+                else:
+                    text += "\n"
+                    text += secWord[i][0]
         elif(sentenceLen== 2):
             thirdWord = nextWordTigram(sentence, tigramModel)
-            print(thirdWord)
+            for i in range (len(thirdWord)):
+                if i == 0:
+                    text+= thirdWord[0][0]
+                else:
+                    text+="\n"
+                    text += thirdWord[i][0]
+        else:
+            sentence=sentence.split()
+            sentence = sentence[-2] + " " + sentence[-1]
+            thirdWord = nextWordTigram(sentence, tigramModel)
+            for i in range(len(thirdWord)):
+                if i == 0:
+                    text += thirdWord[0][0]
+                else:
+                    text += "\n"
+                    text += thirdWord[i][0]
+        label.config(text=text)
 
     entry = tk.Entry(root, textvariable=user_input)
     entry.pack()
     check = tk.Button(root, text='get next word', command=verify)
     check.pack()
+    label = tk.Label(root, text="", font="BOLD")
+    label.pack()
 
     root.mainloop()
 
