@@ -1,17 +1,14 @@
 import collections
 from collections import Counter
+import pandas as pd
 if __name__ == '__main__':
-    corpus = [
-        'I am yousef ahmed student at fcai',
-        'sam i am',
-        'i dont like green eggs and ham',
-        'i am yousef ehab',
-        'The web has become an indispensible resource with a vast amount of information available'
-    ]
-
+    df = pd.read_csv("poems.csv")
+    poems = df.poem_text
+    corpus = [sentence for sentence in list(poems) if isinstance(sentence, str)]
+    print(corpus)
     def buildBigramModel(corpus):
         bigramModel = collections.defaultdict(lambda: collections.defaultdict(lambda: 0))
-        corpus = [word.lower() for word in corpus]
+       #corpus = [word.lower() for word in corpus if word.isaplha()]
         for sentence in corpus:
             sentence = sentence.split()
             for i in range(len(sentence) - 1):
@@ -32,7 +29,6 @@ if __name__ == '__main__':
 
     def buildTigramModel(corpus):
         TigramModel = collections.defaultdict(lambda: collections.defaultdict(lambda: 0))
-        corpus = [word.lower() for word in corpus]
         for sentence in corpus:
             sentence = sentence.split()
             for i in range(len(sentence) - 2):
@@ -53,7 +49,6 @@ if __name__ == '__main__':
 
     bigramModel = buildBigramModel(corpus)
     tigramModel = buildTigramModel(corpus)
-    print(nextWordBigram('i', bigramModel)[0][0])
-    secWord =nextWordBigram('i', bigramModel)[0][0]
-    thword=nextWordTigram("i" + " " + secWord, tigramModel)
-    print(nextWordTigram("i"+ " " + secWord , tigramModel)[0][0])
+    secWord =nextWordBigram('هو', bigramModel)[0][0]
+    print(secWord)
+    print(nextWordTigram('هو'+ " " + secWord , tigramModel)[0][0])
