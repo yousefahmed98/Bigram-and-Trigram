@@ -1,11 +1,15 @@
 import collections
 from collections import Counter
 import pandas as pd
+
+import tkinter  as tk
+
 if __name__ == '__main__':
     df = pd.read_csv("poems.csv")
     poems = df.poem_text
     corpus = [sentence for sentence in list(poems) if isinstance(sentence, str)]
-    print(corpus)
+    #print(corpus)
+    #print(len(corpus))
     def buildBigramModel(corpus):
         bigramModel = collections.defaultdict(lambda: collections.defaultdict(lambda: 0))
        #corpus = [word.lower() for word in corpus if word.isaplha()]
@@ -46,9 +50,30 @@ if __name__ == '__main__':
         sentence = TigramModel[sentence]
         return Counter(sentence).most_common(1)
 
-
+    ###################### GUI ##########################
     bigramModel = buildBigramModel(corpus)
     tigramModel = buildTigramModel(corpus)
-    secWord =nextWordBigram('هو', bigramModel)[0][0]
-    print(secWord)
-    print(nextWordTigram('هو'+ " " + secWord , tigramModel)[0][0])
+    root = tk.Tk()
+
+    user_input = tk.StringVar(root)
+    answer = 3
+
+
+    def verify():
+        sentence = str(user_input.get())
+        sentenceLen = len(sentence.split())
+        if(sentenceLen== 1):
+            secWord=nextWordBigram(sentence,bigramModel)
+            print(secWord)
+        elif(sentenceLen== 2):
+            thirdWord = nextWordTigram(sentence, tigramModel)
+            print(thirdWord)
+
+    entry = tk.Entry(root, textvariable=user_input)
+    entry.pack()
+    check = tk.Button(root, text='get next word', command=verify)
+    check.pack()
+
+    root.mainloop()
+
+
